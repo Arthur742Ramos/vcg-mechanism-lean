@@ -113,6 +113,7 @@ expected_definitions = [
     "VCG.trueUtility",
 ]
 expected_theorems = [
+    "VCG.vcg_greenLaffont",
     "VCG.vcg_efficient",
     "VCG.vcg_truthful",
     "VCG.vcg_individualRational",
@@ -135,8 +136,8 @@ if set(config.get("permitted_axioms", [])) != {
 
 challenge = pathlib.Path("Challenge.lean").read_text(encoding="utf-8")
 sorry_count = len(re.findall(r"\bsorry\b", challenge))
-if sorry_count != 11:
-    raise SystemExit(f"error: Challenge.lean must contain exactly 11 sorry holes, found {sorry_count}")
+if sorry_count != 12:
+    raise SystemExit(f"error: Challenge.lean must contain exactly 12 sorry holes, found {sorry_count}")
 if re.search(r"\b(admit|axiom|unsafe)\b", challenge):
     raise SystemExit("error: Challenge.lean contains admit, axiom, or unsafe")
 
@@ -145,7 +146,7 @@ for path in [pathlib.Path("Solution.lean"), *sorted(pathlib.Path("VCG").rglob("*
     found = re.findall(r"\b(sorry|admit|axiom|unsafe)\b", source)
     if found:
         raise SystemExit(f"error: forbidden token(s) {sorted(set(found))} found in {path}")
-print("Challenge placeholder count passed (11); VCG/ and Solution.lean contain no forbidden placeholders or declarations.")
+print("Challenge placeholder count passed (12); VCG/ and Solution.lean contain no forbidden placeholders or declarations.")
 PY
 
 lake build

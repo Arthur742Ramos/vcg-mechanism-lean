@@ -12,6 +12,7 @@
     "VCG.trueUtility"
   ],
   "theorem_names": [
+    "VCG.vcg_greenLaffont",
     "VCG.vcg_efficient",
     "VCG.vcg_truthful",
     "VCG.vcg_individualRational",

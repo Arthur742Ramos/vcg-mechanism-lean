@@ -77,4 +77,16 @@ theorem vcg_noDeficit {N A : Type*}
     (v : Valuation N A) :
     0 ≤ ∑ i ∈ Finset.univ, clarkePayment v i := sorry
 
+theorem vcg_greenLaffont {N A : Type*}
+    [Fintype N] [Nonempty N] [DecidableEq N]
+    [Fintype A] [Nonempty A] [DecidableEq A]
+    (x : Valuation N A → A) (p : Valuation N A → N → ℝ)
+    (heff : ∀ (v : Valuation N A) (a : A), welfare v a ≤ welfare v (x v))
+    (hdsic : ∀ (v : Valuation N A) (i : N) (r : A → ℝ),
+      v i (x (Function.update v i r)) - p (Function.update v i r) i ≤
+        v i (x v) - p v i) :
+    ∃ (h : N → Valuation N A → ℝ),
+      (∀ i v w, (∀ j, j ≠ i → v j = w j) → h i v = h i w) ∧
+      ∀ v i, p v i = h i v - othersWelfare v i (x v) := sorry
+
 end VCG

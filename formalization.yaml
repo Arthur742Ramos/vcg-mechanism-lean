@@ -4,9 +4,11 @@ version: "v0.4"
 project:
   name: "vcg-mechanism-lean"
   description: >-
-    A Lean formalization of efficiency, dominant-strategy truthfulness,
-    individual rationality under nonnegative valuations, and no deficit for a
-    finite Vickrey–Clarke–Groves mechanism with Clarke pivot payments.
+    A Lean formalization of the Green-Laffont characterization: for finite,
+    nonempty agent and alternative types, efficiency and dominant-strategy
+    incentive compatibility imply that payments have Groves form. The project
+    also verifies four standard properties of the finite VCG mechanism with
+    Clarke pivot payments.
   authors:
     - "Arthur Freitas Ramos"
   responsible_maintainers:
@@ -44,10 +46,34 @@ sources:
     author_endorsement: "not-contacted"
     note: >-
       Source for the broader Groves mechanism family and incentive properties.
+  - title: "Characterization of Satisfactory Mechanisms for the Revelation of Preferences for Public Goods"
+    authors:
+      - "Jerry Green"
+      - "Jean-Jacques Laffont"
+    id: "https://doi.org/10.2307/1911219"
+    type: "article"
+    location: "Econometrica, 45(2), 427–438 (1977)"
+    relationship: "formalizes"
+    author_endorsement: "not-contacted"
+    note: >-
+      A source for the efficiency and strategy-proofness characterization of
+      satisfactory mechanisms.
+  - title: "Groves' Scheme on Restricted Domains"
+    authors:
+      - "Bengt Holmström"
+    id: "https://doi.org/10.2307/1911954"
+    type: "article"
+    location: "Econometrica, 47(5), 1137–1144 (1979)"
+    relationship: "formalizes"
+    author_endorsement: "not-contacted"
+    note: >-
+      A source on uniqueness of Groves schemes on restricted domains.
 
-# A targeted Palomar registry site search on 2026-09-26 for VCG, Vickrey,
-# Clarke, and Groves returned no indexed entries. No prior registry entry could
-# be verified, so related_formalizations is empty; this is not a novelty claim.
+# A targeted Palomar registry search on 2026-09-26 for VCG, Vickrey, Clarke,
+# Groves, and Green-Laffont returned no indexed entries. The authors know of no
+# prior machine-checked proof of this characterization based on that search;
+# this is a registry-checkable statement of current knowledge, not a global
+# novelty claim.
 related_formalizations: []
 
 classification:
@@ -58,13 +84,14 @@ classification:
 status:
   scope: >-
     The agent and alternative types are finite and nonempty and have decidable
-    equality. For every reported valuation profile, the selected alternative
-    maximizes reported welfare. Truth-telling is a dominant strategy in the
-    stated sense: for every true profile v, agent i, and alternate report r,
-    trueUtility v (Function.update v i r) i ≤ trueUtility v v i. Individual
-    rationality is proved under the exact hypothesis hnn : ∀ j a, 0 ≤ v j a,
-    and concludes 0 ≤ utility v i. No deficit states that the sum of Clarke
-    payments over all agents is nonnegative.
+    equality. The headline theorem vcg_greenLaffont assumes an allocation rule
+    x and payment rule p satisfying ∀ v a, welfare v a ≤ welfare v (x v), and
+    ∀ v i r, v i (x (Function.update v i r)) - p (Function.update v i r) i ≤
+    v i (x v) - p v i. It concludes that there exists h such that h i v = h i w
+    whenever v and w agree for every j ≠ i, and ∀ v i, p v i = h i v -
+    othersWelfare v i (x v). The supporting results establish VCG efficiency,
+    dominant-strategy truthfulness, individual rationality under the exact
+    hypothesis ∀ j a, 0 ≤ v j a, and no deficit.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms:
@@ -72,6 +99,20 @@ status:
     - "Classical.choice"
     - "Quot.sound"
   main_results:
+    - declaration: "VCG.vcg_greenLaffont"
+      file: "Solution.lean"
+      description: >-
+        For finite nonempty agent and alternative types with decidable
+        equality, let x : Valuation N A → A and p : Valuation N A → N → ℝ.
+        Given efficiency ∀ v a, welfare v a ≤ welfare v (x v), and DSIC
+        ∀ v i r, v i (x (Function.update v i r)) -
+        p (Function.update v i r) i ≤ v i (x v) - p v i, there is
+        h : N → Valuation N A → ℝ such that
+        (∀ i v w, (∀ j, j ≠ i → v j = w j) → h i v = h i w) ∧
+        ∀ v i, p v i = h i v - othersWelfare v i (x v).
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
     - declaration: "VCG.vcg_efficient"
       file: "Solution.lean"
       description: >-
@@ -120,7 +161,7 @@ automation:
         hardware: "local machine"
       prompting_notes: >-
         The implementation is checked by Lean; Challenge.lean separately
-        states the comparator declarations with 11 intentional placeholders.
+        states the comparator declarations with 12 intentional placeholders.
   spend_usd: "subscription-based"
   notes: >-
     AI assistance was used for formalization and packaging. No Palomar
@@ -196,5 +237,6 @@ review:
     No external or registry review is claimed.
 
 acknowledgements: >-
-  Mathlib contributors and William Vickrey, Edward H. Clarke, and Theodore
-  Groves for the foundational mechanism-design results.
+  Mathlib contributors and William Vickrey, Edward H. Clarke, Theodore Groves,
+  Jerry Green, Jean-Jacques Laffont, and Bengt Holmström for foundational
+  mechanism-design results.
