@@ -61,6 +61,12 @@ theorem pivotTerm_isMax (v : Valuation N A) (i : N) (a : A) :
     othersWelfare v i a ≤ pivotTerm v i := by
   exact (Classical.choice (othersWelfare_maximizer_exists v i)).property a
 
+/-- The pivot term is attained by some alternative. -/
+theorem pivotTerm_attained (v : Valuation N A) (i : N) :
+    ∃ a, othersWelfare v i a = pivotTerm v i := by
+  refine ⟨(Classical.choice (othersWelfare_maximizer_exists v i)).val, ?_⟩
+  rfl
+
 /-- The Clarke pivot payment charged to agent `i`. -/
 noncomputable def clarkePayment (v : Valuation N A) (i : N) : ℝ :=
   pivotTerm v i - othersWelfare v i (xstar v)
