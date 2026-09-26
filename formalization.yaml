@@ -1,0 +1,200 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "vcg-mechanism-lean"
+  description: >-
+    A Lean formalization of efficiency, dominant-strategy truthfulness,
+    individual rationality under nonnegative valuations, and no deficit for a
+    finite Vickrey–Clarke–Groves mechanism with Clarke pivot payments.
+  authors:
+    - "Arthur Freitas Ramos"
+  responsible_maintainers:
+    - "Arthur Freitas Ramos"
+  license: "BSD-3-Clause"
+
+sources:
+  - title: "Counterspeculation, Auctions, and Competitive Sealed Tenders"
+    authors:
+      - "William Vickrey"
+    id: "https://doi.org/10.1111/j.1540-6261.1961.tb02789.x"
+    type: "article"
+    location: "The Journal of Finance, 16(1), 8–37 (1961)"
+    relationship: "formalizes"
+    author_endorsement: "not-contacted"
+    note: >-
+      Foundational source on auctions and incentive-compatible allocation.
+  - title: "Multipart Pricing of Public Goods"
+    authors:
+      - "Edward H. Clarke"
+    id: "https://doi.org/10.1007/BF01726210"
+    type: "article"
+    location: "Public Choice, 11, 17–33 (1971)"
+    relationship: "formalizes"
+    author_endorsement: "not-contacted"
+    note: >-
+      Source associated with the pivot payment rule for public goods.
+  - title: "Incentives in Teams"
+    authors:
+      - "Theodore Groves"
+    id: "https://doi.org/10.2307/1914085"
+    type: "article"
+    location: "Econometrica, 41(4), 617–631 (1973)"
+    relationship: "formalizes"
+    author_endorsement: "not-contacted"
+    note: >-
+      Source for the broader Groves mechanism family and incentive properties.
+
+# A targeted Palomar registry site search on 2026-09-26 for VCG, Vickrey,
+# Clarke, and Groves returned no indexed entries. No prior registry entry could
+# be verified, so related_formalizations is empty; this is not a novelty claim.
+related_formalizations: []
+
+classification:
+  arxiv:
+    - "cs.GT"
+    - "econ.TH"
+
+status:
+  scope: >-
+    The agent and alternative types are finite and nonempty and have decidable
+    equality. For every reported valuation profile, the selected alternative
+    maximizes reported welfare. Truth-telling is a dominant strategy in the
+    stated sense: for every true profile v, agent i, and alternate report r,
+    trueUtility v (Function.update v i r) i ≤ trueUtility v v i. Individual
+    rationality is proved under the exact hypothesis hnn : ∀ j a, 0 ≤ v j a,
+    and concludes 0 ≤ utility v i. No deficit states that the sum of Clarke
+    payments over all agents is nonnegative.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms:
+    - "propext"
+    - "Classical.choice"
+    - "Quot.sound"
+  main_results:
+    - declaration: "VCG.vcg_efficient"
+      file: "Solution.lean"
+      description: >-
+        For every reported profile v and alternative a, welfare v a ≤ welfare
+        v (xstar v).
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+    - declaration: "VCG.vcg_truthful"
+      file: "Solution.lean"
+      description: >-
+        For every true profile v, agent i, and report r : A → ℝ,
+        trueUtility v (Function.update v i r) i ≤ trueUtility v v i.
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+    - declaration: "VCG.vcg_individualRational"
+      file: "Solution.lean"
+      description: >-
+        Given hnn : ∀ j a, 0 ≤ v j a, utility v i is nonnegative for every
+        agent i.
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+    - declaration: "VCG.vcg_noDeficit"
+      file: "Solution.lean"
+      description: >-
+        For every profile v, the sum of Clarke payments over all agents is
+        nonnegative.
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+
+automation:
+  methods:
+    - method: "agent"
+      models:
+        - "GPT-6-Luna via Codex"
+      framework: "Lean 4 v4.35.0-rc2 and Mathlib v4.35.0-rc2"
+      tool_setup: >-
+        The Lean toolchain is pinned by lean-toolchain and the Mathlib revision
+        is pinned in lakefile.toml.
+      cost:
+        wall_time: "not tracked"
+        spend_usd: "subscription-based"
+        hardware: "local machine"
+      prompting_notes: >-
+        The implementation is checked by Lean; Challenge.lean separately
+        states the comparator declarations with 11 intentional placeholders.
+  spend_usd: "subscription-based"
+  notes: >-
+    AI assistance was used for formalization and packaging. No Palomar
+    submission or registration was performed as part of this work.
+
+fidelity:
+  divergences: >-
+    The formal model is a finite social-choice setting with a nonempty finite
+    alternative type and real-valued valuations. The theorem on individual
+    rationality assumes every agent's value for every alternative is
+    nonnegative, exactly as stated in its Lean hypothesis.
+
+alignment:
+  namespace: "VCG"
+  statements:
+    - source: "Valuation, reported welfare, and welfare-maximizing alternative"
+      lean: "VCG.Valuation; VCG.welfare; VCG.xstar"
+      module: "VCG/Basic.lean"
+      status: "defined"
+      note: >-
+        Valuation N A is N → A → ℝ. welfare sums v i a over all agents, and
+        xstar selects an alternative whose welfare is maximal.
+    - source: "Other-agent welfare and Clarke pivot payment"
+      lean: "VCG.othersWelfare; VCG.pivotTerm; VCG.clarkePayment"
+      module: "VCG/Basic.lean"
+      status: "defined"
+      note: >-
+        othersWelfare excludes agent i; pivotTerm is the maximum of that
+        quantity over alternatives; clarkePayment is pivotTerm minus
+        othersWelfare at xstar.
+    - source: "Reported and true quasi-linear utility"
+      lean: "VCG.utility; VCG.trueUtility"
+      module: "VCG/Basic.lean; VCG/Truthful.lean"
+      status: "defined"
+      note: >-
+        utility uses i's reported value at the selected alternative less the
+        payment. trueUtility uses the true profile's value and the reported
+        profile's selected alternative and payment.
+    - source: "Reported-welfare efficiency"
+      lean: "VCG.vcg_efficient"
+      module: "VCG/Truthful.lean"
+      status: "proved"
+      note: >-
+        For every profile v and alternative a, welfare v a ≤ welfare v
+        (xstar v).
+    - source: "Dominant-strategy truthfulness"
+      lean: "VCG.vcg_truthful"
+      module: "VCG/Truthful.lean"
+      status: "proved"
+      note: >-
+        For every profile v, agent i, and report r, trueUtility v
+        (Function.update v i r) i ≤ trueUtility v v i.
+    - source: "Individual rationality under nonnegative valuations"
+      lean: "VCG.vcg_individualRational"
+      module: "VCG/Properties.lean"
+      status: "proved"
+      note: >-
+        With hnn : ∀ j a, 0 ≤ v j a, the conclusion is 0 ≤ utility v i.
+    - source: "No deficit"
+      lean: "VCG.vcg_noDeficit"
+      module: "VCG/Properties.lean"
+      status: "proved"
+      note: >-
+        For every profile v, 0 ≤ ∑ i ∈ Finset.univ, clarkePayment v i.
+
+review:
+  status: "self-assessed"
+  reviewers:
+    - "none"
+  notes: >-
+    Local compilation, comparator declaration checks, placeholder scanning,
+    and the #print axioms audit are recorded by scripts/verify-palomar.sh.
+    No external or registry review is claimed.
+
+acknowledgements: >-
+  Mathlib contributors and William Vickrey, Edward H. Clarke, and Theodore
+  Groves for the foundational mechanism-design results.

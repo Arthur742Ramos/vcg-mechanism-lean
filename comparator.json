@@ -1,0 +1,26 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "definition_names": [
+    "VCG.Valuation",
+    "VCG.welfare",
+    "VCG.xstar",
+    "VCG.othersWelfare",
+    "VCG.pivotTerm",
+    "VCG.clarkePayment",
+    "VCG.utility",
+    "VCG.trueUtility"
+  ],
+  "theorem_names": [
+    "VCG.vcg_efficient",
+    "VCG.vcg_truthful",
+    "VCG.vcg_individualRational",
+    "VCG.vcg_noDeficit"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "enable_nanoda": true
+}
