@@ -1,4 +1,6 @@
-import VCG.Basic
+module
+
+public import VCG.Basic
 
 set_option linter.unusedSectionVars false
 
@@ -16,11 +18,11 @@ variable [Fintype N] [Nonempty N] [DecidableEq N]
 variable [Fintype A] [Nonempty A] [DecidableEq A]
 
 /-- Agent `i`'s true utility when the mechanism is run on reported profile `w`. -/
-noncomputable def trueUtility (v w : Valuation N A) (i : N) : ℝ :=
+@[expose] public noncomputable def trueUtility (v w : Valuation N A) (i : N) : ℝ :=
   v i (xstar w) - clarkePayment w i
 
 /-- Changing agent `i`'s report does not change the welfare of the other agents. -/
-theorem othersWelfare_update (v : Valuation N A) (i : N) (r : A → ℝ) (a : A) :
+public theorem othersWelfare_update (v : Valuation N A) (i : N) (r : A → ℝ) (a : A) :
     othersWelfare (Function.update v i r) i a = othersWelfare v i a := by
   unfold othersWelfare
   apply Finset.sum_congr rfl
@@ -29,7 +31,7 @@ theorem othersWelfare_update (v : Valuation N A) (i : N) (r : A → ℝ) (a : A)
 
 /-- Agent `i`'s maximum attainable welfare from the other agents is unaffected
 by a change to `i`'s own report. -/
-theorem pivotTerm_update (v : Valuation N A) (i : N) (r : A → ℝ) :
+public theorem pivotTerm_update (v : Valuation N A) (i : N) (r : A → ℝ) :
     pivotTerm (Function.update v i r) i = pivotTerm v i := by
   apply le_antisymm
   · obtain ⟨a, ha⟩ := pivotTerm_attained (Function.update v i r) i
@@ -45,7 +47,7 @@ theorem pivotTerm_update (v : Valuation N A) (i : N) (r : A → ℝ) :
 
 /-- If all other agents report truthfully, true utility is total welfare at the
 chosen alternative minus the pivot term. -/
-theorem trueUtility_eq_of_agree (v w : Valuation N A) (i : N)
+public theorem trueUtility_eq_of_agree (v w : Valuation N A) (i : N)
     (h : ∀ j, j ≠ i → w j = v j) :
     trueUtility v w i = welfare v (xstar w) - pivotTerm w i := by
   have hothers (a : A) : othersWelfare w i a = othersWelfare v i a := by
@@ -66,7 +68,7 @@ theorem trueUtility_eq_of_agree (v w : Valuation N A) (i : N)
     _ = welfare v (xstar w) - pivotTerm w i := by rw [hsum]
 
 /-- Reporting one's true valuation weakly maximizes one's utility. -/
-theorem vcg_truthful (v : Valuation N A) (i : N) (r : A → ℝ) :
+public theorem vcg_truthful (v : Valuation N A) (i : N) (r : A → ℝ) :
     trueUtility v (Function.update v i r) i ≤ trueUtility v v i := by
   let w := Function.update v i r
   have hagree : ∀ j, j ≠ i → w j = v j := by
@@ -82,7 +84,7 @@ theorem vcg_truthful (v : Valuation N A) (i : N) (r : A → ℝ) :
     _ = trueUtility v v i := rfl
 
 /-- The selected alternative maximizes total welfare. -/
-theorem vcg_efficient (v : Valuation N A) (a : A) :
+public theorem vcg_efficient (v : Valuation N A) (a : A) :
     welfare v a ≤ welfare v (xstar v) :=
   xstar_isMax v a
 

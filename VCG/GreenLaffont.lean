@@ -1,5 +1,7 @@
-import VCG.Truthful
-import Mathlib.Tactic
+module
+
+public import VCG.Truthful
+public import Mathlib.Tactic
 
 set_option linter.unusedSectionVars false
 
@@ -17,14 +19,14 @@ variable [Fintype N] [Nonempty N] [DecidableEq N]
 variable [Fintype A] [Nonempty A] [DecidableEq A]
 
 /-- Total welfare splits into agent `i`'s value and the other agents' welfare. -/
-theorem welfare_eq (v : Valuation N A) (i : N) (a : A) :
+public theorem welfare_eq (v : Valuation N A) (i : N) (a : A) :
     welfare v a = v i a + othersWelfare v i a := by
   unfold welfare othersWelfare
   exact (Finset.univ.add_sum_erase (fun j => v j a) (Finset.mem_univ i)).symm
 
 /-- Efficient, strategy-proof payments have the same value plus others'
 welfare at profiles that agree outside the reporting agent. -/
-lemma groves_key (x : Valuation N A → A) (p : Valuation N A → N → ℝ)
+public lemma groves_key (x : Valuation N A → A) (p : Valuation N A → N → ℝ)
     (heff : ∀ (v : Valuation N A) (a : A), welfare v a ≤ welfare v (x v))
     (hdsic : ∀ (v : Valuation N A) (i : N) (r : A → ℝ),
       v i (x (Function.update v i r)) - p (Function.update v i r) i ≤
@@ -181,7 +183,7 @@ lemma groves_key (x : Valuation N A → A) (p : Valuation N A → N → ℝ)
 /-- Green–Laffont characterization: efficiency and DSIC force payments to have
 Groves form, with each agent's Groves term independent of that agent's report.
 -/
-theorem vcg_greenLaffont (x : Valuation N A → A) (p : Valuation N A → N → ℝ)
+public theorem vcg_greenLaffont (x : Valuation N A → A) (p : Valuation N A → N → ℝ)
     (heff : ∀ (v : Valuation N A) (a : A), welfare v a ≤ welfare v (x v))
     (hdsic : ∀ (v : Valuation N A) (i : N) (r : A → ℝ),
       v i (x (Function.update v i r)) - p (Function.update v i r) i ≤

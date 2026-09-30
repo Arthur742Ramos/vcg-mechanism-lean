@@ -1,1 +1,3 @@
-import VCG.Main
+module
+
+public import VCG.Main
