@@ -80,6 +80,8 @@ classification:
   arxiv:
     - "cs.GT"
     - "econ.TH"
+  msc2020:
+    - "91B26"
 
 status:
   scope: >-
